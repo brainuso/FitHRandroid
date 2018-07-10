@@ -1,16 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".ProfileActivity"
+    android:orientation="vertical">
 
     <EditText
-        android:id="@+id/editText"
-        android:layout_width="1dp"
+        android:id="@+id/agent_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:ems="10"
+        android:inputType="number"
+        android:text="@string/title_agent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="145dp"
+        tools:ignore="MissingConstraints" />
+
+    <EditText
+        android:id="@+id/age_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:ems="10"
+        android:inputType="number"
+        android:text="@string/title_age"
+
+        tools:layout_editor_absoluteY="210dp"
+        tools:ignore="MissingConstraints" />
+
+    <EditText
+        android:id="@+id/height_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:text="@string/title_height"
+
+        tools:layout_editor_absoluteY="271dp"
+        tools:ignore="MissingConstraints" />
+
+    <EditText
+        android:id="@+id/weight_edit"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="numberDecimal"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="106dp" />
-</android.support.constraint.ConstraintLayout>
+        android:text="@string/title_weight"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="371dp"
+        tools:ignore="MissingConstraints" />
+
+    <EditText
+        android:id="@+id/restHR_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:text="@string/title_rest_HR"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="444dp"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/profile_save_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SAVE"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="252dp"
+        tools:layout_editor_absoluteY="501dp"
+        android:onClick="launchSaveProfile"
+        tools:ignore="MissingConstraints" />
+
+</android.support.v7.widget.LinearLayoutCompat>
