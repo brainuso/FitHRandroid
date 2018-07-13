@@ -16,10 +16,16 @@ class MainActivity : AppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.menu)
     }
-    */fun launchOpenActivity(view: View){
+    */
+    fun launchProfileActivity(view: View){
           val intent = Intent(this, ProfileActivity::class.java)
 
           startActivity(intent)
       }
 
+   fun launchMain3Activity(view: View){
+    val intent = Intent(this, Main3Activity::class.java)
+
+    startActivity(intent)
+}
 }
