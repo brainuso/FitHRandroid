@@ -20,7 +20,7 @@ class Person {
     }
 }
 
-/*
+
 fun main(args: Array<String>){
     val person = Person()
     person.id = "Agent123"
@@ -30,4 +30,6 @@ fun main(args: Array<String>){
 
     println("${person.id} is ${person.height}m tall")
     println(HR.rest)
-}*/
+}
+
+

@@ -28,4 +28,10 @@ class MainActivity : AppCompatActivity() {
 
     startActivity(intent)
 }
+
+    /*fun launchSettingsActivity(view: View){
+        val intent = Intent(this, SettingsActivity::class.java)
+
+        startActivity(intent)
+    }*/
 }
