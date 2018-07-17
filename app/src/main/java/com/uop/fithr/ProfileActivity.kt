@@ -35,7 +35,8 @@ class ProfileActivity : AppCompatActivity() {
                //Plug max HR value to display TextView
                val  display =  findViewById<TextView>(R.id.max_hr)
                 display.text =  "${person.maxHR}"
-                Toast.makeText(applicationContext, person.id, Toast.LENGTH_LONG).show()
+
+               //Toast.makeText(applicationContext, person.id, Toast.LENGTH_LONG).show()
 
 
             }

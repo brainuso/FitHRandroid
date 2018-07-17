@@ -11,7 +11,7 @@ import android.view.ViewGroup
 public class TabHR : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.tab_hr2, container, false)
+        val rootView = inflater.inflate(R.layout.tab_hr, container, false)
         return rootView
     }
 
