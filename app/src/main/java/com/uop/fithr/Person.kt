@@ -24,9 +24,10 @@ class HRCalc {
         return max
     }
 }
+/*
 
 fun main(args: Array<String>){
-    /*val person = Person()
+    val person = Person()
     person.id = "Carl"
     person.weight = 68.8
     person.age = 23
@@ -34,8 +35,7 @@ fun main(args: Array<String>){
     val HR = HRCalc()
     HR.rest = 56.2
     val HRmax = HR.calc(person.weight, person.age)
-    println("The max HR for ${person.id} is ${HRmax}")*/
-
+    println("The max HR for ${person.id} is ${HRmax}")
 }
-
+*/
 
