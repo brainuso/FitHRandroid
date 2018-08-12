@@ -99,4 +99,8 @@
     <string name="weight_title">Weight (kg)</string>
     <string name="resting_hr_title">Resting HR</string>
     <string name="instructText">Hello, please fill the fields to calculate your maximum heart rate (Max HR)</string>
+    <string name="chromeBtnText">Login</string>
+    <string name="no">NO</string>
+    <string name="yes">YES</string>
+    <string name="notification_message1">Are you alright?</string>
 </resources>

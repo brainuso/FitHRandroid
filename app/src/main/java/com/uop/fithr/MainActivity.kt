@@ -42,6 +42,13 @@ class MainActivity : AppCompatActivity() {
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }*/
+//get Person() from ProfileActivity
+ /*       intent?.let{
+            val person = intent.extras.getParcelable<Person>("personKey")
+            if(person == null){
+
+            }
+        }*/
 
     }
 
