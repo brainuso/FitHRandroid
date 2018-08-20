@@ -20,7 +20,7 @@ public class TabHR : Fragment() {
 
 
 
-        displayHR.text = person.toString()
+       // displayHR.text = person.toString()
 
         return rootView
 

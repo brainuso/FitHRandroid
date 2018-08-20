@@ -6,19 +6,25 @@ import java.io.Serializable
 
 //class to store user details
 
-public class Person() : Parcelable {
+public class Old_Person() : Parcelable {
     var id: String = ""
+    var height: Double = 0.0
+    var weight: Double = 0.0
     var age: Int = 0
     var maxHR: Double = 0.0
 
     constructor(parcel: Parcel) : this() {
         id = parcel.readString()
+        height = parcel.readDouble()
+        weight = parcel.readDouble()
         age = parcel.readInt()
         maxHR = parcel.readDouble()
     }
     //inner class for HR properties
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(id)
+        parcel.writeDouble(height)
+        parcel.writeDouble(weight)
         parcel.writeInt(age)
         parcel.writeDouble(maxHR)
     }
@@ -39,7 +45,7 @@ public class Person() : Parcelable {
 
 }
 //Class to store HR details and calculate maximum HR
-class HRCalc() : Parcelable {
+class Old_HRCalc() : Parcelable {
     var rest: Double = 0.0
     var now: Double = 0.0
     var min: Double = 0.0
@@ -52,7 +58,7 @@ class HRCalc() : Parcelable {
         max = parcel.readDouble()
     }
 
-    fun calcMaxHR(age: Int): Double{
+    fun calcMaxHR(weight: Double, age: Int): Double{
         //put HR calculation here
         //Heil method of heart rate
         /*var kg2lbs: Double = weight * 2.2046
