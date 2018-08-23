@@ -28,7 +28,7 @@ class FitbitDataActivity : AppCompatActivity() {
         //hr value in the last 15 minutes.
                   val url: String = "https://api.fitbit.com/1/user/-/activities/heart/date/today/1d/1sec/time/00:00/00:15.json"
 
- val extras: Bundle = intent.extras
+     val extras: Bundle = intent.extras
         val accessToken = extras.getString("accessToken")
        run(url, accessToken)
 

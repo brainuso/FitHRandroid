@@ -54,14 +54,6 @@ class ProfileActivity : AppCompatActivity() {
         val  display =  findViewById<TextView>(R.id.max_hr)
 
 
-       /* editTextAge.onFocusChangeListener = object: View.OnFocusChangeListener{
-            override fun onFocusChange(v: View?, hasFocus: Boolean) {
-
-                CalcHr()
-                DisplayMaxHR(display)
-            }
-        }*/
-
         btnLogin.setOnClickListener(object: View.OnClickListener {
            override  fun onClick(v: View){
 //               Validate user input

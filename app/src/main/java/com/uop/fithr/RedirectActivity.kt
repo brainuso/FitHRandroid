@@ -57,7 +57,7 @@ class RedirectActivity : AppCompatActivity() {
 
           //  GetEndpointData(url+endpoint, accessToken)
 
-            val intent = Intent(this, FitbitDataActivity::class.java)
+            val intent = Intent(this, MainActivity::class.java)
 
             intent.putExtra("accessToken", accessToken)
             intent.putExtra("tokenType", tokenType)

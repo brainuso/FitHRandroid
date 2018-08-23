@@ -12,7 +12,7 @@
         android:id="@+id/section_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello"
+        android:text="HELlo"
 
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
@@ -30,7 +30,7 @@
         android:layout_marginEnd="140dp"
         android:layout_marginTop="92dp"
         android:background="@drawable/shape_circle"
-        android:text=""
+        android:text="HI"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

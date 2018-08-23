@@ -3,17 +3,35 @@ package com.uop.fithr
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
+import com.google.gson.Gson
+import kotlinx.android.synthetic.main.activity_fitbit_data.*
 import kotlinx.android.synthetic.main.activity_main.*
+import okhttp3.*
+import java.io.BufferedInputStream
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
 
 class MainActivity : AppCompatActivity() {
+    val client = OkHttpClient()
 
-    /**
+    val gson = Gson()
+    val TAG = "MyActivity"
+
+    //hr value in the last 15 minutes.
+     val url: String = "https://api.fitbit.com/1/user/-/"
+     val endpoint: String = "activities/heart/date/today/1d/1sec/time/00:00/00:15.json"
+            /**
      * The [android.support.v4.view.PagerAdapter] that will provide
      * fragments for each of the sections. We use a
      * {@link FragmentPagerAdapter} derivative, which will keep every
@@ -34,6 +52,8 @@ class MainActivity : AppCompatActivity() {
 
         // Set up the ViewPager with the sections adapter.
         container.adapter = mSectionsPagerAdapter
+
+
 
         container.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
         tabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(container))
@@ -90,8 +110,10 @@ class MainActivity : AppCompatActivity() {
         override fun getItem(position: Int): Fragment {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
+
             if(position == 0){
                 return TabHR()
+                //TabHR().displayHR(hrData)
             }
             else if(position == 1){
                 return TabToday()
@@ -103,7 +125,6 @@ class MainActivity : AppCompatActivity() {
                 return TabHR()
             }
 
-
         }
 
         override fun getCount(): Int {
@@ -112,45 +133,5 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-
-
 }
 
-/*
-
-class MainActivity : AppCompatActivity() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main2)
-
-    }
-    */
-/*override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        return super.onCreateOptionsMenu(menu)
-        menuInflater.inflate(R.menu.menu)
-    }
-    *//*
-
-    fun launchProfileActivity(view: View){
-          val intent = Intent(this, ProfileActivity::class.java)
-
-          startActivity(intent)
-      }
-
-   fun launchMain3Activity(view: View){
-    val intent = Intent(this, Main3Activity::class.java)
-
-    startActivity(intent)
-}
-
-    */
-/*fun launchSettingsActivity(view: View){
-        val intent = Intent(this, SettingsActivity::class.java)
-
-        startActivity(intent)
-    }*//*
-
-}
-*/
