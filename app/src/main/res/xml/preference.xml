@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="notification_switch"
+        android:title="Notification"
+        android:summary="Toggle notification to Fitbit"/>
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="export_checkbox"
+        android:title="Export"
+        android:summary="Export HR data as .csv"/>
+    <Preference android:title="About"
+        android:key="about_pref">
+        <intent android:action="android.intent.action.VIEW"
+            android:data="https://.fithr.choiceworker.com/about.html"/>
+    </Preference>
+    <Preference android:title="Privacy Policy"
+        android:key="privacy_pref">
+        <intent android:action="android.intent.action.VIEW"
+            android:data="https://.fithr.choiceworker.com/privacy.html"/>
+    </Preference>
+</PreferenceScreen>
