@@ -75,11 +75,11 @@
     <string name="pref_title_vibrate">Vibrate</string>
 
     <!-- String name for Profile xml-->
-    <string name="title_agent">Agent ID</string>
-    <string name="title_age">Age</string>
-    <string name="title_height">Height</string>
-    <string name="title_weight">Weight</string>
-    <string name="title_rest_HR">Resting HR</string>
+    <string name="title_agent">Agent ID*</string>
+    <string name="title_age">Age*</string>
+    <string name="title_height">Height (m)*</string>
+    <string name="title_weight">Weight (kg)*</string>
+    <string name="title_rest_HR">Resting HR*</string>
 
     <string name="title_activity_main2">Main2Activity</string>
     <string name="title_activity_main3">Main3Activity</string>
@@ -98,4 +98,10 @@
     <string name="height_title">Height (m)</string>
     <string name="weight_title">Weight (kg)</string>
     <string name="resting_hr_title">Resting HR</string>
+    <string name="instructText">Hello, please fill the fields to calculate your maximum heart rate (Max HR)</string>
+    <string name="chromeBtnText">Login</string>
+    <string name="no">NO</string>
+    <string name="yes">YES</string>
+    <string name="notification_message1">Are you alright?</string>
+    <string name="title_activity_main">FitHR</string>
 </resources>

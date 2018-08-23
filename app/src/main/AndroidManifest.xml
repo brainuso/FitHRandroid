@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.uop.fithr">
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -10,22 +11,41 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".SplashScreenActivity"
+            android:name=".ProfileActivity"
             android:noHistory="true"
-            android:theme="@style/SplashTheme">
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"
-            android:label="@string/title_activity_main3"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".ProfileActivity" />
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+
+        <activity android:name=".SplashScreenActivity" />
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings"></activity>
+            android:label="@string/title_activity_settings" />
+        <activity android:name=".CustomTabsActivity" />
+        <activity android:name=".FitbitDataActivity" />
+        <activity android:name=".NotificationActivity"></activity>
+        <activity android:name=".RedirectActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="fithr"
+                    android:host="finished"/>
+
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
