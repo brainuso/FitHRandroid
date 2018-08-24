@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.tab_hr.*
 import okhttp3.*
 import org.w3c.dom.Text
@@ -21,6 +22,8 @@ import java.io.IOException
 import java.io.InputStreamReader
 import org.json.JSONArray
 
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 // class for manipulating tab_HR xml
@@ -30,13 +33,11 @@ val TAG = "HRvalue "
     val url: String = "https://api.fitbit.com/1/user/-/"
     val endpoint: String = "activities/heart/date/today/1d/1sec/time/00:00/00:15.json"
     val client = OkHttpClient()
-    val gson = Gson()
+    val gson = GsonBuilder().create()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.tab_hr, container, false)
 
-
-        //hrCircle.text = displayHR()
         return rootView
     }
 
@@ -79,19 +80,15 @@ val TAG = "HRvalue "
     //    Display Heart rate result
     fun DisplayResponse(result : String){
         Handler(Looper.getMainLooper()).post(Runnable{
-
-            Log.d(TAG, "the JSON is: $result")
-//            HR.text = result
-
-          val jsonObject = gson.toJson(result)
-
-          //  section_label.text = jsonObject
-            val text = jsonObject.elementAt(2)
-
-            HR.text = text.toString()
-            val listdata = ArrayList<String>()
-
-
+            val dataset = gson.fromJson(result, HeartRateValues::class.java)
+//            val set = gson.fromJson(result, HeartRateValues::class.java)
+            if(dataset != null){
+//           time and value || 00:00:00 : Xx.x
+                val text = dataset.activitiesHeartIntraday?.dataset.toString()
+                Log.d(TAG, "the dataset is: $text")
+//            shows last heart rate data from dataset :HeartRateValues
+                HR.text = dataset.activitiesHeartIntraday?.dataset?.last()?.lastHr()
+            }
         })
     }
 
@@ -101,12 +98,5 @@ val TAG = "HRvalue "
         bufferedReader.forEachLine { stringBuilder.append(it) }
         return stringBuilder.toString()
     }
-
-    fun displayHR(hrData: String){
-
-    HR.text = hrData
-
-//    Toast.makeText(context, hrData, Toast.LENGTH_LONG).show()
-}
 
 }
