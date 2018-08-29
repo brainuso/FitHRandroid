@@ -29,7 +29,7 @@ import java.util.*
 // class for manipulating tab_HR xml
 
 public class TabHR : Fragment() {
-val TAG = "HRvalue "
+val TAG = "TabHR "
     val url: String = "https://api.fitbit.com/1/user/-/"
     val endpoint: String = "activities/heart/date/today/1d/1sec/time/00:00/00:15.json"
     val client = OkHttpClient()
@@ -47,9 +47,7 @@ val TAG = "HRvalue "
         val extras: Bundle? =  activity?.intent?.extras
         val accessToken = extras?.getString("accessToken")
         val tokenType = extras?.getString("tokenType")
-
         GetEndpointData(url+endpoint, accessToken, tokenType)
-
     }
 
     fun GetEndpointData(url: String, accessToken: String?, tokenType: String?){
@@ -68,9 +66,7 @@ val TAG = "HRvalue "
 
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()
-
                 val stream = BufferedInputStream(body!!.byteStream())
-
                 val hrData = readStream(stream)
                 DisplayResponse(hrData)
             }
@@ -81,13 +77,15 @@ val TAG = "HRvalue "
     fun DisplayResponse(result : String){
         Handler(Looper.getMainLooper()).post(Runnable{
             val dataset = gson.fromJson(result, HeartRateValues::class.java)
-//            val set = gson.fromJson(result, HeartRateValues::class.java)
             if(dataset != null){
 //           time and value || 00:00:00 : Xx.x
                 val text = dataset.activitiesHeartIntraday?.dataset.toString()
                 Log.d(TAG, "the dataset is: $text")
+
 //            shows last heart rate data from dataset :HeartRateValues
                 HR.text = dataset.activitiesHeartIntraday?.dataset?.last()?.lastHr()
+
+//                val restingHR = dataset.activitiesHeart.withValue()
             }
         })
     }

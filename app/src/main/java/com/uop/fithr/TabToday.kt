@@ -1,21 +1,36 @@
 package com.uop.fithr
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.*
+import com.google.gson.GsonBuilder
+import kotlinx.android.synthetic.main.tab_hr.*
 import kotlinx.android.synthetic.main.tab_today.*
+import okhttp3.*
+import java.io.BufferedInputStream
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
 
 // class for manipulating tab_today xml
 
 public class TabToday  : Fragment() {
+    val TAG = "TabToday"
+    val url: String = "https://api.fitbit.com/1/user/-/"
+    val endpoint: String = "activities/heart/date/today/1d/1sec/time/00:00/00:15.json"
+    val client = OkHttpClient()
+    val gson = GsonBuilder().create()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -28,6 +43,14 @@ public class TabToday  : Fragment() {
         return rootView
     }
 
+    override fun onResume() {
+        super.onResume()
+//        activity?.intent
+        val extras: Bundle? =  activity?.intent?.extras
+        val accessToken = extras?.getString("accessToken")
+        val tokenType = extras?.getString("tokenType")
+        GetEndpointData(url+endpoint, accessToken, tokenType)
+    }
     private fun setLineChart(lineChart: LineChart){
 
         val entries = ArrayList<Entry>()
@@ -70,4 +93,46 @@ public class TabToday  : Fragment() {
         dataSet.setDrawFilled(true)
     }
 
+    fun GetEndpointData(url: String, accessToken: String?, tokenType: String?){
+        val request = Request.Builder()
+                .url(url)
+                .header("Authorization", tokenType+ " " + accessToken)
+                .addHeader("Accept-Language", "en_GB")
+                .build()
+
+        val call = client.newCall(request)
+
+        call.enqueue(object : Callback {
+            override fun onFailure(call: Call?, e: IOException?) {
+                Toast.makeText(context, "didn't work", Toast.LENGTH_SHORT)
+            }
+
+            override fun onResponse(call: Call?, response: Response?) {
+                val body = response?.body()
+                val stream = BufferedInputStream(body!!.byteStream())
+                val hrData = readStream(stream)
+                DisplayResponse(hrData)
+            }
+        })
+    }
+
+    fun DisplayResponse(result : String){
+        Handler(Looper.getMainLooper()).post(Runnable{
+            val dataset = gson.fromJson(result, HeartRateValues::class.java)
+            if(dataset != null){
+//           time and value || 00:00:00 : Xx.x
+                val text = dataset.activitiesHeartIntraday?.dataset.toString()
+                Log.d(TAG, "the dataset is: $text")
+//            shows last heart rate data from dataset :HeartRateValues
+                val dum = dataset.activitiesHeartIntraday?.dataset?.last()?.lastHr()
+            }
+        })
+    }
+
+    fun readStream(inputStream: BufferedInputStream): String {
+        val bufferedReader = BufferedReader(InputStreamReader(inputStream))
+        val stringBuilder = StringBuilder()
+        bufferedReader.forEachLine { stringBuilder.append(it) }
+        return stringBuilder.toString()
+    }
 }

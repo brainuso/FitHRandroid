@@ -10,17 +10,20 @@ public class Person() : Parcelable {
     var id: String = ""
     var age: Int = 0
     var maxHR: Double = 0.0
+    var thresholdHR: Double = 0.0
 
     constructor(parcel: Parcel) : this() {
         id = parcel.readString()
         age = parcel.readInt()
         maxHR = parcel.readDouble()
+        thresholdHR = parcel.readDouble()
     }
-    //inner class for HR properties
+
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(id)
         parcel.writeInt(age)
         parcel.writeDouble(maxHR)
+        parcel.writeDouble(thresholdHR)
     }
 
     override fun describeContents(): Int {
@@ -62,6 +65,11 @@ class HRCalc() : Parcelable {
          var max = 208 - (0.7 * age)
 
         return max
+    }
+
+    fun calcThresholdHR(max: Double): Double{
+        var thr = 0.8 * max
+        return thr
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

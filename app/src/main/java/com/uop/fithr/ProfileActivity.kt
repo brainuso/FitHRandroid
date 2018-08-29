@@ -21,10 +21,9 @@ import java.text.DecimalFormat
 
 class ProfileActivity : AppCompatActivity() {
     val CUSTOM_TAB_PACKAGE_NAME = "com.android.chrome";
-
-//    Class declaration
     val person = Person()
     val HR = HRCalc()
+//    Class declaration
     //Chrome warm up
     private var mCustomTabsServiceConnection: CustomTabsServiceConnection? = null
     private var mClient: CustomTabsClient? = null
@@ -34,7 +33,6 @@ class ProfileActivity : AppCompatActivity() {
     private val CLIENT_ID: String = "22CTQS"
     private val CLIENT_SECRET: String = "c38350b61da3aa821865ed879a8d80cd"
     private val REDIRECT_URL: String = "fithr://finished"
-
     //Token details
     private val AUTH_URL: String = "https://www.fitbit.com/oauth2/authorize"
     private val REFRESH_TOKEN: String = "https://api.fitbit.com/oauth2/token"
@@ -53,6 +51,12 @@ class ProfileActivity : AppCompatActivity() {
         val editTextAge = findViewById<EditText>(R.id.age_edit)
         val  display =  findViewById<TextView>(R.id.max_hr)
 
+//        check
+        if(person.id != ""){
+            editTextId.setText(person.id)
+            editTextAge.setText(person.age)
+            display.text = person.maxHR.toString()
+        }
 
         btnLogin.setOnClickListener(object: View.OnClickListener {
            override  fun onClick(v: View){
@@ -60,13 +64,14 @@ class ProfileActivity : AppCompatActivity() {
               InputValidation(editTextId, editTextAge)
 //               Calculate max hr and display in text view and Toast.
               DisplayMaxHR(display)
+//               thresholdHr = threshold heart rate
+             val thresholdHr = HR.calcThresholdHR(person.maxHR)
 
                //Delay for toast to display and them move to MainActivity
                val background = object : Thread (){
                    override fun run() {
                        try {
                            Thread.sleep(3000)
-
                            mCustomTabsServiceConnection = object : CustomTabsServiceConnection() {
                                override fun onCustomTabsServiceConnected(componentName: ComponentName, customTabsClient: CustomTabsClient) {
                                    //Pre-warming
@@ -80,23 +85,17 @@ class ProfileActivity : AppCompatActivity() {
                                            "&scope=heartrate" +
                                            "&expires_in=604800")
                                }
-
                                override fun onServiceDisconnected(name: ComponentName) {
                                    mClient = null
                                }
                            }
                            CustomTabsClient.bindCustomTabsService(applicationContext, CUSTOM_TAB_PACKAGE_NAME, mCustomTabsServiceConnection);
-
-                           /*   val intent = Intent(applicationContext, CustomTabsActivity::class.java)
-                              //intent.putECustomTabsActivityxtra("personKey", person)
-                              startActivity(intent)*/
                        }catch (e : Exception){
                            e.printStackTrace()
                        }
                    }
                }
                background.start()
-
             }
         })
 
@@ -107,7 +106,6 @@ class ProfileActivity : AppCompatActivity() {
                 .setToolbarColor(color)
                 .setShowTitle(true)
                 .build()
-
         customTabsIntent.launchUrl(this, Uri.parse(url))
 
     }
@@ -137,8 +135,11 @@ class ProfileActivity : AppCompatActivity() {
     //Calculate maximum HR and convert to 2 decimal place
     fun CalcHr(): Double{
         person.maxHR = twoDecimalFormat.format(HR.calcMaxHR(person.age)).toDouble()
+
         return person.maxHR
     }
+
+
 
     //Display maximum Heart Rate
     fun DisplayMaxHR(display: TextView){
