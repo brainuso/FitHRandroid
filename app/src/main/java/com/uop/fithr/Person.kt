@@ -87,25 +87,8 @@ class HRCalc() : Parcelable {
         override fun createFromParcel(parcel: Parcel): HRCalc {
             return HRCalc(parcel)
         }
-
         override fun newArray(size: Int): Array<HRCalc?> {
             return arrayOfNulls(size)
         }
     }
-
 }
-/*
-
-fun main(args: Array<String>){
-    val person = Person()
-    person.id = "Carl"
-    person.weight = 68.8
-    person.age = 23
-    person.height = 1.77
-    val HR = HRCalc()
-    HR.rest = 56.2
-    val HRmax = HR.calc(person.weight, person.age)
-    println("The max HR for ${person.id} is ${HRmax}")
-}
-*/
-

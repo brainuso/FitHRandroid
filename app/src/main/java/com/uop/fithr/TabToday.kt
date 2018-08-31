@@ -25,7 +25,7 @@ import java.io.InputStreamReader
 
 // class for manipulating tab_today xml
 
-public class TabToday  : Fragment() {
+public class TabToday : Fragment() {
     val TAG = "TabToday"
     val url: String = "https://api.fitbit.com/1/user/-/"
     val endpoint: String = "activities/heart/date/today/1d/1sec/time/00:00/00:15.json"
@@ -36,55 +36,54 @@ public class TabToday  : Fragment() {
                               savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.tab_today, container, false)
 
-        val lineChart = rootView.findViewById<LineChart>(R.id.line_chart)
 
 
-       setLineChart(lineChart)
+
         return rootView
     }
 
     override fun onResume() {
         super.onResume()
 //        activity?.intent
-        val extras: Bundle? =  activity?.intent?.extras
+        val extras: Bundle? = activity?.intent?.extras
         val accessToken = extras?.getString("accessToken")
         val tokenType = extras?.getString("tokenType")
-        GetEndpointData(url+endpoint, accessToken, tokenType)
+        GetEndpointData(url + endpoint, accessToken, tokenType)
     }
-    private fun setLineChart(lineChart: LineChart){
+
+    private fun setLineChart() {
 
         val entries = ArrayList<Entry>()
-        entries.add( Entry(1f, 0))
+        entries.add(Entry(1f, 0))
         entries.add(Entry(8f, 1))
-        entries.add( Entry(6f, 2))
-        entries.add( Entry(2f, 3))
-        entries.add( Entry(18f, 4))
-        entries.add( Entry(9f, 5))
+        entries.add(Entry(6f, 2))
+        entries.add(Entry(2f, 3))
+        entries.add(Entry(18f, 4))
+        entries.add(Entry(9f, 5))
 
 
         val dataSet = LineDataSet(entries, "Heart rate")
         val labels = ArrayList<String>()
 
-        for (i in 1..6){
+        for (i in 1..6) {
             labels.add("${i}")
         }
-    //Dispays Label of the xAxis on the bottom
-        val xAxis: XAxis = lineChart.xAxis
+        //Dispays Label of the xAxis on the bottom
+        val xAxis: XAxis = line_chart.xAxis
         xAxis.setAxisMinValue(0f)
         xAxis.position = XAxis.XAxisPosition.BOTTOM
-        val yAxis: YAxis = lineChart.axisLeft
+        val yAxis: YAxis = line_chart.axisLeft
         yAxis.setAxisMinValue(0f)
         yAxis.setDrawGridLines(false)
         yAxis.setDrawZeroLine(true)
 
-       xAxis.position = XAxis.XAxisPosition.BOTTOM
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
 
         val data = LineData(labels, dataSet)
         try {
-            lineChart.data = data
-        }
-        catch (e: Exception){
-            Log.e("error",e.message)
+            line_chart.data = data
+        } catch (e: Exception) {
+            Log.e("error", e.message)
         }
 
 
@@ -93,10 +92,11 @@ public class TabToday  : Fragment() {
         dataSet.setDrawFilled(true)
     }
 
-    fun GetEndpointData(url: String, accessToken: String?, tokenType: String?){
+
+    fun GetEndpointData(url: String, accessToken: String?, tokenType: String?) {
         val request = Request.Builder()
                 .url(url)
-                .header("Authorization", tokenType+ " " + accessToken)
+                .header("Authorization", tokenType + " " + accessToken)
                 .addHeader("Accept-Language", "en_GB")
                 .build()
 
@@ -111,21 +111,23 @@ public class TabToday  : Fragment() {
                 val body = response?.body()
                 val stream = BufferedInputStream(body!!.byteStream())
                 val hrData = readStream(stream)
-                DisplayResponse(hrData)
+                DisplayGraphResponse(hrData)
             }
         })
+
     }
 
-    fun DisplayResponse(result : String){
-        Handler(Looper.getMainLooper()).post(Runnable{
+    fun DisplayGraphResponse(result: String) {
+        Handler(Looper.getMainLooper()).post(Runnable {
             val dataset = gson.fromJson(result, HeartRateValues::class.java)
-            if(dataset != null){
+            if (dataset != null) {
 //           time and value || 00:00:00 : Xx.x
                 val text = dataset.activitiesHeartIntraday?.dataset.toString()
                 Log.d(TAG, "the dataset is: $text")
 //            shows last heart rate data from dataset :HeartRateValues
-                val dum = dataset.activitiesHeartIntraday?.dataset?.last()?.lastHr()
+
             }
+            setLineChart()
         })
     }
 
@@ -135,4 +137,5 @@ public class TabToday  : Fragment() {
         bufferedReader.forEachLine { stringBuilder.append(it) }
         return stringBuilder.toString()
     }
+
 }

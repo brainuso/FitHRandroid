@@ -34,11 +34,10 @@ class RedirectActivity : AppCompatActivity() {
         GetFitbitParameters(returnUrl)
     }
 
-    fun GetFitbitParameters(returnUrl: Uri){
+    fun GetFitbitParameters(returnUrl: Uri) {
         if (returnUrl != null) {
-
             //replaced the # with ? in the response.
-            val urlReplace = returnUrl.toString().replace('#','?')
+            val urlReplace = returnUrl.toString().replace('#', '?')
 
             val finalUrl: Uri = Uri.parse(urlReplace)
 
@@ -49,13 +48,6 @@ class RedirectActivity : AppCompatActivity() {
             val scope = finalUrl.getQueryParameter("scope")
             val tokenType = finalUrl.getQueryParameter("token_type")
             val expiresIn = finalUrl.getQueryParameter("expires_in")
-
-//            Start intent to pass access token to data second page
-//            val intent = Intent(this, FitbitDataActivity::class.java)
-
-
-
-          //  GetEndpointData(url+endpoint, accessToken)
 
             val intent = Intent(this, MainActivity::class.java)
 
