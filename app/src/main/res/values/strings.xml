@@ -105,7 +105,5 @@
     <string name="notification_message1">Are you alright?</string>
     <string name="title_activity_main">FitHR</string>
     <string name="bpm">bpm</string>
-    <string name="threshold_heart_rate">Threshold Heart Rate:</string>
-    <string name="resting_heart_rate">Resting Heart Rate:</string>
-    <string name="maximum_heart_rate">Maximum Heart Rate:</string>
+
 </resources>

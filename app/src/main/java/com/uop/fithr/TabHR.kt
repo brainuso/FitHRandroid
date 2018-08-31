@@ -1,20 +1,15 @@
 package com.uop.fithr
 
-import android.app.Activity
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Context
+import android.app.*
+import android.content.*
+import android.content.ContentValues.TAG
 import android.content.Context.MODE_PRIVATE
-import android.content.Intent
+import android.content.Intent.CATEGORY_LAUNCHER
 import android.content.Intent.getIntent
-import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.graphics.Color
-import android.os.Build
+import android.os.*
 import android.support.v4.app.Fragment
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.preference.PreferenceManager
 import android.support.v4.app.NotificationCompat
 import android.support.v4.widget.SwipeRefreshLayout
@@ -25,6 +20,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.browser.browseractions.BrowserActionItem
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.tab_hr.*
@@ -47,54 +43,58 @@ class TabHR : Fragment() {
 
 
     val TAG = "TabHR "
-    val url: String = "https://api.fitbit.com/1/user/-/"
-    val endpoint: String = "activities/heart/date/today/1d/1sec/time/00:00/00:15.json"
+    val url: String = "https://api.fitbit.com/1/user/-/activities/heart/date/today/1d/1sec/time/"
+//    endpoint needs to be updated every minute but couldn't find a way to manipulate time in order to acheive that the
+//    current end point is set to 10am and 10:01am.
+    val endpoint: String = "12:45/12:46.json"
+//    val endpoint: String = "activities/heart/date/today/1d/1sec.json" doesn't work
     val client = OkHttpClient()
     val gson = GsonBuilder().create()
 
     private var notificationManager: NotificationManager? = null
-
+    private var alarmManager: AlarmManager? = null
     val bpm: String = "bpm"
-
     val gsonPref = Gson()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.tab_hr, container, false)
 
         notificationManager = activity?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        createNotifcationChannel("www.choice.com", "NotifyDemo", "Example Channel")
+
+        alarmManager = activity?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+//        val broadcastManager = object: BroadcastReceiver(){
+//            override fun onReceive(context: Context?, intent: Intent?) {
+//                Toast.makeText(context, "hearing you", Toast.LENGTH_LONG).show()
+//                Log.d("MyActivity", "hearing you")
+////        GetEndpointData(url + endpoint)
+//            }
+//        }
+
+//        context?.registerReceiver(broadcastManager, IntentFilter("com.uop.fithr"))
 
         return rootView
     }
-//    override fun onRefresh() {
-//        Handler(Looper.getMainLooper()).postDelayed(Runnable {
-//
-//            swipe_container?.setOnRefreshListener(this);
-//
-//            swipe_container?.setColorSchemeResources(android.R.color.holo_blue_bright,
-//                    android.R.color.holo_green_light,
-//                    android.R.color.holo_orange_light,
-//                    android.R.color.holo_red_light);
-//            try {
-//                Toast.makeText(context, "hello, got you", Toast.LENGTH_LONG).show()
-////                GetEndpointData(url + endpoint, accessToken, tokenType)
-//                swipe_container?.isRefreshing = false
-//            } catch (e: Exception) {
-//                swipe_container?.isRefreshing = false
-//                Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
-//            }
-//        }, 5000);
-//
-//    }
 
     override fun onStart() {
         super.onStart()
-        val extras: Bundle? = activity?.intent?.extras
-        val accessToken = extras?.getString("accessToken")
-        val tokenType = extras?.getString("tokenType")
-        GetEndpointData(url + endpoint, accessToken, tokenType)
+
+
+        GetEndpointData(url + endpoint)
     }
 
-    fun GetEndpointData(url: String, accessToken: String?, tokenType: String?) {
+    override fun onResume() {
+        super.onResume()
+        GetEndpointData(url + endpoint)
+    }
+
+    fun GetEndpointData(url: String) {
+        val extras = activity?.intent?.extras
+        val accessToken = extras?.getString("accessToken")
+        val tokenType = extras?.getString("tokenType")
+
         val request = Request.Builder()
                 .url(url)
                 .header("Authorization", tokenType + " " + accessToken)
@@ -111,8 +111,21 @@ class TabHR : Fragment() {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()
                 val stream = BufferedInputStream(body!!.byteStream())
-                val hrData = readStream(stream)
-                DisplayResponse(hrData)
+                val hrDataresponse = readStream(stream)
+                DisplayResponse(hrDataresponse)
+
+//                val receiver = ComponentName(context, Broadcast::class.java)
+//                val pm = context?.packageManager
+//                pm?.setComponentEnabledSetting(receiver, PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+//                        PackageManager.DONT_KILL_APP)
+//
+                var calendar = Calendar.getInstance()
+                calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
+                calendar.add(Calendar.SECOND, 10)
+                val intent = Intent()
+                val pi = PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                alarmManager?.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, calendar.get(Calendar.MILLISECOND).toLong(), pi)
+
             }
         })
     }
@@ -120,34 +133,35 @@ class TabHR : Fragment() {
     //    Display Heart rate result
     fun DisplayResponse(result: String) {
         Handler(Looper.getMainLooper()).post(Runnable {
-            val dataset = gson.fromJson(result, HeartRateValues::class.java)
-            if (dataset != null) {
-//           time and value || 00:00:00 : Xx.x
-                val hrData = dataset.activitiesHeartIntraday?.dataset.toString()
-                Log.d(TAG, "dataset: $dataset")
-//            shows last heart rate data from dataset :HeartRateValues
-                var currHr = dataset.activitiesHeartIntraday?.dataset?.last()?.lastHr()
+            HRvalue.text = getJsonHeartRate(result)
 
-                HRvalue.text = currHr
-                resting_heart_rate.append(" 56.2" +bpm)
-                val mPrefs: SharedPreferences? = PreferenceManager.getDefaultSharedPreferences(context)
-                val json = mPrefs?.getString("person", "")
-                val foo = gsonPref.fromJson(json, Person::class.java)
-                val id = foo.id
-                val age = foo.age
-                val maxHr = foo.maxHR
+            val mPrefs: SharedPreferences? = PreferenceManager.getDefaultSharedPreferences(context)
+            val json = mPrefs?.getString("person", "")
+            val foo = gsonPref.fromJson(json, Person::class.java)
+            val id = foo.id
+            val age = foo.age
+            val maxHr = foo.maxHR
 //                val thresholdHr = foo.thresholdHR
+            val thresholdHr = 70.0
 
-                val thresholdHr = 90.0
+            resting_heart_rate.setText("Resting Heart Rate: 56.2 " + bpm)
+            maximum_heart_rate.setText("Maximum Heart Rate: ${maxHr} " + bpm)
+            threshold_heart_rate.setText("Threshold Heart Rate: ${thresholdHr} " + bpm)
 
-                maximum_heart_rate.append(" ${maxHr}" + bpm)
-                threshold_heart_rate.append(" ${thresholdHr}" + bpm)
+            paramCheck(getJsonHeartRate(result)!!.toDouble(), thresholdHr)
 
-                threshholdParamCheck(currHr!!.toDouble(), thresholdHr)
-
-
-            }
         })
+    }
+
+    fun getJsonHeartRate(value: String): String? {
+        val dataset = gson.fromJson(value, HeartRateValues::class.java)
+//           time and value || 00:00:00 : Xx.x
+        val hrData = dataset.activitiesHeartIntraday?.dataset.toString()
+        Log.d(TAG, "dataset: $hrData")
+//            shows last heart rate data from dataset :HeartRateValues
+        var currHr = dataset.activitiesHeartIntraday?.dataset?.last()?.lastHr()
+
+        return currHr
     }
 
     fun readStream(inputStream: BufferedInputStream): String {
@@ -157,17 +171,14 @@ class TabHR : Fragment() {
         return stringBuilder.toString()
     }
 
-
-    fun threshholdParamCheck(currHr: Double, thresholdHr: Double) {
+    fun paramCheck(currHr: Double, thresholdHr: Double) {
         if (currHr >= thresholdHr) {
             val highHr: String = "Hello, your heart rate is high. Are you alright?"
             sendNotification(highHr)
         } else if (currHr < 35) {
-            val highHr: String = "Hello, your heart rate is low. Are you alright?"
-            sendNotification(highHr)
+            val lowHr: String = "Hello, your heart rate is low. Are you alright?"
+            sendNotification(lowHr)
         }
-        createNotifcationChannel("www.choice.com",
-                "NotifyDemo", "Example Channel")
     }
 
     private fun sendNotification(text: String) {
