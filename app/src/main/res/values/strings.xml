@@ -102,8 +102,14 @@
     <string name="chromeBtnText">Login</string>
     <string name="no">NO</string>
     <string name="yes">YES</string>
-    <string name="notification_message1">Are you alright?</string>
     <string name="title_activity_main">FitHR</string>
     <string name="bpm">bpm</string>
+<string name="alright">Are you Alright?</string>
+<string name="lowHr_text">Your heart rate is low. Are you alright?</string>
+<string name="highHr_text">Your heart rate is high. Are you alright?</string>
+<string name="make_call">Should we call an Mike?</string>
+<string name="no_make_call">If you are sure, alright.</string>
+<string name="exercising_activity">Are you exercising or engaged in any activity?</string>
+<string name="yes_exercising">Great,I will not get in your way.</string>
 
 </resources>

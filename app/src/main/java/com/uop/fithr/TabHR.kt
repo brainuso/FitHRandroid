@@ -39,14 +39,11 @@ import java.util.*
 // class for manipulating tab_HR xml
 
 class TabHR : Fragment() {
-//class TabHR : Fragment(), SwipeRefreshLayout.OnRefreshListener {
-
-
     val TAG = "TabHR "
     val url: String = "https://api.fitbit.com/1/user/-/activities/heart/date/today/1d/1sec/time/"
 //    endpoint needs to be updated every minute but couldn't find a way to manipulate time in order to acheive that the
-//    current end point is set to 10am and 10:01am.
-    val endpoint: String = "12:45/12:46.json"
+//    current end point is set to 8am and 8:01am.
+    val endpoint: String = "08:00/08:01.json"
 //    val endpoint: String = "activities/heart/date/today/1d/1sec.json" doesn't work
     val client = OkHttpClient()
     val gson = GsonBuilder().create()
@@ -80,15 +77,13 @@ class TabHR : Fragment() {
 
     override fun onStart() {
         super.onStart()
-
-
         GetEndpointData(url + endpoint)
     }
 
-    override fun onResume() {
-        super.onResume()
-        GetEndpointData(url + endpoint)
-    }
+//    override fun onResume() {
+//        super.onResume()
+//        GetEndpointData(url + endpoint)
+//    }
 
     fun GetEndpointData(url: String) {
         val extras = activity?.intent?.extras
@@ -173,18 +168,20 @@ class TabHR : Fragment() {
 
     fun paramCheck(currHr: Double, thresholdHr: Double) {
         if (currHr >= thresholdHr) {
-            val highHr: String = "Hello, your heart rate is high. Are you alright?"
+            val highHr: String = getString(R.string.highHr_text)
             sendNotification(highHr)
         } else if (currHr < 35) {
-            val lowHr: String = "Hello, your heart rate is low. Are you alright?"
+            val lowHr: String = getString(R.string.lowHr_text)
             sendNotification(lowHr)
         }
     }
 
     private fun sendNotification(text: String) {
 
+
         val notificationID = 101
         val notifIntent = Intent(context, NotificationActivity::class.java)
+        notifIntent.putExtra("notificationText", text)
 
         val pendingIntent = PendingIntent.getActivity(context, 0,
                 notifIntent, PendingIntent.FLAG_UPDATE_CURRENT)
